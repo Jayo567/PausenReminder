@@ -1,5 +1,7 @@
 package dev.jayo.Misc;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,13 +39,23 @@ public class PausenPlan {
         }
     }
 
+    public ArrayList<String> getNaechstePause() {
+        LocalDate today = LocalDate.now();
+
+        DayOfWeek tag = today.getDayOfWeek();
+
+        Map<String, ArrayList<String>> toModify = getDayFromString(tag.name());
+
+        return null;
+    }
+
     public Map<String, ArrayList<String>> getDayFromString(String tag) {
-        switch (tag) {
-            case "Montag", "Monday" -> {return Montag;}
-            case "Dienstag", "Tuesday" -> {return Dienstag;}
-            case "Mittwoch", "Wednesday" -> {return Mittwoch;}
-            case "Donnerstag", "Thursday" -> {return Donnerstag;}
-            case "Freitag", "Friday" -> {return Freitag;}
+        switch (tag.toLowerCase()) {
+            case "montag", "monday" -> {return Montag;}
+            case "dienstag", "tuesday" -> {return Dienstag;}
+            case "mittwoch", "wednesday" -> {return Mittwoch;}
+            case "donnerstag", "thursday" -> {return Donnerstag;}
+            case "freitag", "friday" -> {return Freitag;}
         }
         return null;
     }

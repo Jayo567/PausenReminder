@@ -119,7 +119,13 @@ public class PausenZeitenEditor extends JFrame {
 
             if (var instanceof ArrayList<?>) {
                 ArrayList<String> list = (ArrayList<String>) var;
-
+                new NewPausenZeit(
+                        this,
+                        plan,
+                        tagColumnsReverse.get(column),
+                        (String) tableModel.getValueAt(row, 0),
+                        list
+                );
             }
         });
     }

@@ -10,8 +10,8 @@ import java.io.*;
 public class HauptUI extends JFrame {
     private JPanel panel1;
     private JButton btnBearbeiten;
-    private JLabel lblStatus;
-    private JLabel lblNaechstePause;
+    public JLabel lblStatus;
+    public JLabel lblNaechstePause;
     private JButton btnEnde;
 
     private PausenZeitenEditor pausenEditor;
