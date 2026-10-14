@@ -57,7 +57,7 @@ public class NewPausenZeit extends JFrame {
     public NewPausenZeit(PausenZeitenEditor UI, PausenPlan plan, String tag, String pausenName, ArrayList<String> Uhrzeit) {
         setContentPane(panel1);
         pack();
-        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle("Pausen Zeiten Editor");
         setLocationRelativeTo(UI);
         setVisible(true);
@@ -73,9 +73,9 @@ public class NewPausenZeit extends JFrame {
         if (Uhrzeit != null) {
             if (Uhrzeit.getFirst() != null) {
                 tfUhrzeitVon.setText(Uhrzeit.getFirst());
-            }
-            if (Uhrzeit.get(1) != null) {
-                tfUhrzeitBis.setText(Uhrzeit.get(1));
+                if (Uhrzeit.size() >= 2 && Uhrzeit.get(1) != null) {
+                    tfUhrzeitBis.setText(Uhrzeit.get(1));
+                }
             }
         }
 

@@ -1,21 +1,26 @@
 package dev.jayo.UI;
 
+import com.google.gson.Gson;
+import dev.jayo.Misc.DateiLocations;
 import dev.jayo.Misc.PausenPlan;
 import dev.jayo.Misc.TagRunnable;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public class PausenZeitenEditor extends JFrame {
     private JTable tblMain;
     private JButton btnEdit;
     private JPanel panel1;
-    private JButton speichernButton;
+    private JButton btnSpeichern;
     private JButton neuButton;
+    private JButton btnDel;
+    private JButton btnSchlieszen;
     private String[] Tage = {"Pausen Name", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"};
 
     private Map<String, Integer> tagColumns = Map.of(
@@ -91,14 +96,10 @@ public class PausenZeitenEditor extends JFrame {
 
     }
 
-    public void updateTable(PausenPlan plan) {
-        encodeTable(plan);
-    }
-
     public PausenZeitenEditor(JFrame UI, PausenPlan plan) {
         setContentPane(panel1);
         pack();
-        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle("Pausen Zeiten Editor");
         setLocationRelativeTo(UI);
         setVisible(true);
@@ -126,6 +127,34 @@ public class PausenZeitenEditor extends JFrame {
                         (String) tableModel.getValueAt(row, 0),
                         list
                 );
+            }
+        });
+        btnSchlieszen.addActionListener(e -> {
+            this.dispose();
+        });
+        btnSpeichern.addActionListener(e -> {
+            Gson gson = new Gson();
+
+            File pausenJson = DateiLocations.getPausenJson();
+
+            try (FileWriter in = new FileWriter(pausenJson)) {
+                gson.toJson(plan, in);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        btnDel.addActionListener(e -> {
+            int ja = JOptionPane.showConfirmDialog(this, "Sind sie sicher?");
+
+            if (ja == JOptionPane.YES_OPTION) {
+                int column = tblMain.getSelectedColumn();
+                int row = tblMain.getSelectedRow();
+
+                plan.remove(
+                        tagColumnsReverse.get(column),
+                        (String) tableModel.getValueAt(row, 0)
+                );
+                this.encodeTable(plan);
             }
         });
     }

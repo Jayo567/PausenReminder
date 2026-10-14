@@ -10,11 +10,12 @@ import java.io.*;
 public class HauptUI extends JFrame {
     private JPanel panel1;
     private JButton btnBearbeiten;
-    public JLabel lblStatus;
     public JLabel lblNaechstePause;
     private JButton btnEnde;
 
     private PausenZeitenEditor pausenEditor;
+
+    public PausenPlan plan;
 
     public HauptUI() {
         setContentPane(panel1);
@@ -26,7 +27,6 @@ public class HauptUI extends JFrame {
 
         DateiLocations.ensureFolders(this);
 
-        PausenPlan plan = new PausenPlan();
         Gson gson = new Gson();
 
         File pausenJson = new File(DateiLocations.IT_ORDNER + File.separator +
@@ -38,8 +38,6 @@ public class HauptUI extends JFrame {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        System.out.println(plan.Montag);
 
         PausenPlan finalPlan = plan;
         btnBearbeiten.addActionListener(e -> {

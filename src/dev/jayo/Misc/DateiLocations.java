@@ -9,7 +9,9 @@ public class DateiLocations {
     public static String JAYO_ORDNER = "jayoApp";
     public static String PAUSEN_ZEITEN = "pausenZeiten.json";
 
-
+    public static File getPausenJson() {
+        return new File(IT_ORDNER + File.separator + JAYO_ORDNER + File.separator + PAUSEN_ZEITEN);
+    }
 
     public static void ensureFolders(JFrame fenster) {
         File itOrdner = new File(IT_ORDNER);

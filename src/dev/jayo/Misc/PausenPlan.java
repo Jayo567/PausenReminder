@@ -1,8 +1,7 @@
 package dev.jayo.Misc;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,14 +22,7 @@ public class PausenPlan {
     }
 
     public void update(String tag, String pausenName, ArrayList<String> Uhrzeit) {
-        Map<String, ArrayList<String>> toModify = null;
-        switch (tag) {
-            case "Montag" -> toModify = Montag;
-            case "Dienstag" -> toModify = Dienstag;
-            case "Mittwoch" -> toModify = Mittwoch;
-            case "Donnerstag" -> toModify = Donnerstag;
-            case "Freitag" -> toModify = Freitag;
-        }
+        Map<String, ArrayList<String>> toModify = getDayFromString(tag);
 
         if (toModify != null && toModify.get(pausenName) != null) {
             toModify.replace(pausenName, Uhrzeit);
@@ -39,12 +31,55 @@ public class PausenPlan {
         }
     }
 
-    public ArrayList<String> getNaechstePause() {
+    public void remove(String tag, String pausenName) {
+        Map<String, ArrayList<String>> toModify = getDayFromString(tag);
+
+        if (toModify != null && toModify.get(pausenName) != null) {
+            toModify.remove(pausenName);
+        }
+    }
+
+    public NaechstePauseReturn getNaechstePause() {
         LocalDate today = LocalDate.now();
 
         DayOfWeek tag = today.getDayOfWeek();
 
-        Map<String, ArrayList<String>> toModify = getDayFromString(tag.name());
+        Map<String, ArrayList<String>> toSearch = getDayFromString(tag.name());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm");
+        LocalDateTime now = LocalDateTime.now();
+
+        Instant jetztInstant = now.toInstant(ZoneOffset.UTC);
+
+        long shortestTime = Long.MAX_VALUE;
+        String selectedKey = "";
+        Instant selectedInstant = null;
+
+        for (String key : toSearch.keySet()) {
+            ArrayList<String> Uhrzeit = toSearch.get(key);
+
+            String anfang = Uhrzeit.getFirst();
+
+            LocalTime anfangLT = LocalTime.parse(anfang, formatter);
+
+            Instant dannInstant = anfangLT.atDate(today).toInstant(ZoneOffset.UTC);
+
+            Duration res = Duration.between(jetztInstant, dannInstant);
+
+            if (shortestTime > res.toSeconds() && res.toSeconds() >= 0) {
+                shortestTime = res.toSeconds();
+                selectedKey = key;
+                selectedInstant = dannInstant;
+            }
+        }
+
+        if (!selectedKey.isEmpty()) {
+            return new NaechstePauseReturn(
+                    selectedKey,
+                    toSearch.get(selectedKey),
+                    selectedInstant
+            );
+        }
 
         return null;
     }
