@@ -1,9 +1,14 @@
 package dev.jayo.Misc;
 
+import dev.jayo.Misc.ReturnClasses.JetzigePause;
+import dev.jayo.Misc.ReturnClasses.NaechstePauseReturn;
+
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class PausenPlan {
@@ -29,6 +34,55 @@ public class PausenPlan {
         } else if (toModify != null) {
             toModify.put(pausenName, Uhrzeit);
         }
+    }
+
+    public JetzigePause getJetzigePause() {
+        LocalDate today = LocalDate.now();
+
+        DayOfWeek tag = today.getDayOfWeek();
+
+        Map<String, ArrayList<String>> toSearch = getDayFromString(tag.name());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm");
+        LocalDateTime now = LocalDateTime.now();
+
+        Instant jetztInstant = now.toInstant(ZoneOffset.UTC);
+
+        long shortestTime = Long.MAX_VALUE;
+        String selectedKey = "";
+
+
+        for (String key : toSearch.keySet()) {
+            ArrayList<String> Uhrzeit = toSearch.get(key);
+
+            String anfang = Uhrzeit.getFirst();
+            String ende;
+
+            if (Uhrzeit.size() >= 2) {
+                ende = Uhrzeit.getLast();
+
+                LocalTime anfangLT = LocalTime.parse(anfang, formatter);
+                LocalTime endeLT = LocalTime.parse(ende, formatter);
+
+                Instant dannInstant = anfangLT.atDate(today).toInstant(ZoneOffset.UTC);
+                Instant endeInstant = endeLT.atDate(today).toInstant(ZoneOffset.UTC);
+
+                Duration diffAnfang = Duration.between(jetztInstant, dannInstant);
+                Duration diffEnde = Duration.between(jetztInstant, endeInstant);
+
+
+
+                if (diffAnfang.isNegative() && diffEnde.isPositive()) {
+                    return new JetzigePause(
+                            key,
+                            Uhrzeit,
+                            endeInstant
+                    );
+                }
+            }
+        }
+
+        return null;
     }
 
     public void remove(String tag, String pausenName) {

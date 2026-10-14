@@ -1,6 +1,7 @@
 package dev.jayo;
 
-import dev.jayo.Misc.NaechstePauseReturn;
+import dev.jayo.Misc.ReturnClasses.JetzigePause;
+import dev.jayo.Misc.ReturnClasses.NaechstePauseReturn;
 import dev.jayo.UI.HauptUI;
 
 import java.text.DecimalFormat;
@@ -22,8 +23,31 @@ public class Main extends Thread {
         while (true) {
             try {
                 LocalDateTime now = LocalDateTime.now();
+                DecimalFormat decimalFormat = new DecimalFormat("00");
 
+                JetzigePause jetzigePause = mainFenster.plan.getJetzigePause();
                 NaechstePauseReturn stuff = mainFenster.plan.getNaechstePause();
+
+                if (jetzigePause != null) {
+
+                    Instant jetztInstant = now.toInstant(ZoneOffset.UTC);
+                    Instant dannInstant = jetzigePause.instant();
+
+                    Duration res = Duration.between(jetztInstant, dannInstant);
+
+                    long seconds = res.getSeconds();
+                    long minutes = res.abs().toMinutes();
+                    long hours = res.abs().toHours();
+
+                    mainFenster.lblNaechstePause.setText(
+                            jetzigePause.pausenName() + " endet in: " +
+                                     hours + ":" + decimalFormat.format((minutes % 60)) + ":" + decimalFormat.format((seconds % 60)) +
+                                    " (" + jetzigePause.uhrzeit().getLast() + ")"
+                    );
+
+                    Thread.sleep(1000);
+                    continue;
+                }
 
                 if (stuff == null) {
                     mainFenster.lblNaechstePause.setText("Gar nix mehr für heute.");
@@ -32,8 +56,6 @@ public class Main extends Thread {
                     Instant dannInstant = stuff.instant();
 
                     Duration res = Duration.between(jetztInstant, dannInstant);
-
-                    DecimalFormat decimalFormat = new DecimalFormat("00");
 
                     long seconds = res.getSeconds();
                     long minutes = res.abs().toMinutes();

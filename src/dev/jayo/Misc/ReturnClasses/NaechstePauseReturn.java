@@ -1,4 +1,4 @@
-package dev.jayo.Misc;
+package dev.jayo.Misc.ReturnClasses;
 
 import java.time.Instant;
 import java.util.ArrayList;
