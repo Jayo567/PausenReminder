@@ -1,5 +1,6 @@
 package dev.jayo.Misc;
 
+import dev.jayo.Main;
 import dev.jayo.Misc.ReturnClasses.JetzigePause;
 import dev.jayo.Misc.ReturnClasses.NaechstePauseReturn;
 
@@ -32,6 +33,8 @@ public class PausenPlan {
         } else if (toModify != null) {
             toModify.put(pausenName, Uhrzeit);
         }
+
+        Main.mainClass.firstRunComplete = false;
     }
 
     public void remove(String tag, String pausenName) {
@@ -40,6 +43,7 @@ public class PausenPlan {
         if (toModify != null && toModify.get(pausenName) != null) {
             toModify.remove(pausenName);
         }
+        Main.mainClass.firstRunComplete = false;
     }
 
     public JetzigePause getJetzigePause() {

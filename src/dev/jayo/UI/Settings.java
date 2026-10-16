@@ -4,6 +4,8 @@ import dev.jayo.Misc.DateiLocations;
 import dev.jayo.Misc.UserSettings;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Settings extends JFrame {
     private JButton btnChangeTableLocation;
@@ -11,6 +13,7 @@ public class Settings extends JFrame {
     private JLabel lblTableLocation;
     private JPanel panel1;
     private JCheckBox cbGetNotifs;
+    private JButton btnSaveAndQuit;
 
     private UserSettings userSettings = DateiLocations.userSettings;
 
@@ -29,6 +32,10 @@ public class Settings extends JFrame {
         });
         cbGetNotifs.addActionListener(e -> {
             userSettings.bekommtBenachrichtigungen = cbGetNotifs.isSelected();
+        });
+        btnSaveAndQuit.addActionListener(e -> {
+            DateiLocations.saveUserSettings();
+            this.dispose();
         });
     }
 }

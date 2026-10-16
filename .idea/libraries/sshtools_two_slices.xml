@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="sshtools.two.slices" type="repository">
+    <properties maven-id="com.sshtools:two-slices:LATEST" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sshtools/two-slices/0.9.7/two-slices-0.9.7.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
