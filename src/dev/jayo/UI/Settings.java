@@ -28,7 +28,7 @@ public class Settings extends JFrame {
         cbGetNotifs.setSelected(userSettings.bekommtBenachrichtigungen);
 
         btnRemindMeWhen.addActionListener(e -> {
-            new RemindMeWhen(ui);
+            new RemindMeWhen(this);
         });
         cbGetNotifs.addActionListener(e -> {
             userSettings.bekommtBenachrichtigungen = cbGetNotifs.isSelected();

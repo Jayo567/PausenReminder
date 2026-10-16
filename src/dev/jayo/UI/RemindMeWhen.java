@@ -25,7 +25,7 @@ public class RemindMeWhen extends JFrame {
         }
     }
 
-    public RemindMeWhen(HauptUI ui) {
+    public RemindMeWhen(Settings ui) {
         setContentPane(panel1);
         pack();
         setLocationRelativeTo(ui);
