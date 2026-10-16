@@ -5,10 +5,8 @@ import dev.jayo.Misc.ReturnClasses.NaechstePauseReturn;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class PausenPlan {
@@ -36,6 +34,14 @@ public class PausenPlan {
         }
     }
 
+    public void remove(String tag, String pausenName) {
+        Map<String, ArrayList<String>> toModify = getDayFromString(tag);
+
+        if (toModify != null && toModify.get(pausenName) != null) {
+            toModify.remove(pausenName);
+        }
+    }
+
     public JetzigePause getJetzigePause() {
         LocalDate today = LocalDate.now();
 
@@ -47,10 +53,6 @@ public class PausenPlan {
         LocalDateTime now = LocalDateTime.now();
 
         Instant jetztInstant = now.toInstant(ZoneOffset.UTC);
-
-        long shortestTime = Long.MAX_VALUE;
-        String selectedKey = "";
-
 
         for (String key : toSearch.keySet()) {
             ArrayList<String> Uhrzeit = toSearch.get(key);
@@ -83,14 +85,6 @@ public class PausenPlan {
         }
 
         return null;
-    }
-
-    public void remove(String tag, String pausenName) {
-        Map<String, ArrayList<String>> toModify = getDayFromString(tag);
-
-        if (toModify != null && toModify.get(pausenName) != null) {
-            toModify.remove(pausenName);
-        }
     }
 
     public NaechstePauseReturn getNaechstePause() {

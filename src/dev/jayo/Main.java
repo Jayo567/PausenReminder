@@ -1,5 +1,6 @@
 package dev.jayo;
 
+import dev.jayo.Misc.DateiLocations;
 import dev.jayo.Misc.ReturnClasses.JetzigePause;
 import dev.jayo.Misc.ReturnClasses.NaechstePauseReturn;
 import dev.jayo.UI.HauptUI;
@@ -13,6 +14,11 @@ public class Main extends Thread {
     public HauptUI mainFenster;
 
     public static void main(String[] args) {
+        //DateiLocations.getAppData();
+        DateiLocations.prepUserSettings();
+
+        System.out.println(DateiLocations.userSettings);
+
         Main thread = new Main();
         thread.mainFenster = new HauptUI();
         thread.start();
@@ -22,6 +28,12 @@ public class Main extends Thread {
     public void run() {
         while (true) {
             try {
+                if (mainFenster == null || mainFenster.plan == null) {
+                    System.out.println("Etwas existiert nicht.");
+                    Thread.sleep(1000);
+                    continue;
+                }
+
                 LocalDateTime now = LocalDateTime.now();
                 DecimalFormat decimalFormat = new DecimalFormat("00");
 

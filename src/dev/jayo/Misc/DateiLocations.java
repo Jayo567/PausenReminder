@@ -1,16 +1,53 @@
 package dev.jayo.Misc;
 
+import com.google.gson.Gson;
+
 import javax.swing.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 public class DateiLocations {
     public static String IT_ORDNER = "S:/";
     public static String JAYO_ORDNER = "jayoApp";
     public static String PAUSEN_ZEITEN = "pausenZeiten.json";
+    public static String USER_SETTINGS = "BenutzerEinstellungen.json";
+
+    public static UserSettings userSettings = new UserSettings();
 
     public static File getPausenJson() {
         return new File(IT_ORDNER + File.separator + JAYO_ORDNER + File.separator + PAUSEN_ZEITEN);
+    }
+
+    public static void saveUserSettings() {
+        Gson gson = new Gson();
+        var file = new File(getAppData(), DateiLocations.USER_SETTINGS);
+
+        try (FileWriter in = new FileWriter(file)) {
+            gson.toJson(DateiLocations.userSettings, in);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Konnte nicht BenutzerEinstellungen.json speichern.");
+        }
+    }
+
+    public static File getAppData() {
+        String appDataPath = System.getenv("APPDATA");
+        System.out.println(appDataPath);
+
+        if (appDataPath != null) {
+            File appFolder = new File(appDataPath, "jayoApp");
+
+            if (!appFolder.exists()) {
+                boolean created = appFolder.mkdir();
+
+                if (!created) {
+                    System.out.println("AppData Folder nicht erstellt.");
+                }
+            }
+
+            return appFolder;
+        } else {
+            System.out.println("Kein Windows OS oder OS mit AppData.");
+            return null;
+        }
     }
 
     public static void ensureFolders(JFrame fenster) {
@@ -36,6 +73,32 @@ public class DateiLocations {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    public static void prepUserSettings() {
+        Gson gson = new Gson();
+        File settings = new File(getAppData(), USER_SETTINGS);
+
+        System.out.println(settings.getAbsolutePath());
+
+        System.out.println();
+
+        userSettings = new UserSettings();
+
+        if (!settings.exists()) {
+            try {
+                settings.createNewFile();
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, "Konnte nicht BenutzerEinstellungen.json erstellen.");
+            }
+        } else {
+            try (FileReader in = new FileReader(settings)) {
+                userSettings = gson.fromJson(in, UserSettings.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+                userSettings = new UserSettings();
             }
         }
     }
