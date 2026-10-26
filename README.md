@@ -1,3 +1,1 @@
-practice app
-uh
-use IntelliJ Idea to build
+practice app, use IntelliJ Idea to build
